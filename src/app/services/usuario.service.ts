@@ -7,7 +7,7 @@ import { User } from '../model/user.model';
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = 'http://localhost:8086/api/usuario';
+  private apiUrl = 'https://librotech-api.onrender.com/api/usuario';
 
   constructor(private http: HttpClient) {}
 
