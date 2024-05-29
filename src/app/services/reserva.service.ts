@@ -8,7 +8,7 @@ import { Reserva } from '../model/reserva.model';
   providedIn: 'root'
 })
 export class ReservaService {
-  private apiUrl = 'http://localhost:8086/api/reservas';
+  private apiUrl = 'https://librotech-api.onrender.com/api/reservas';
 
   constructor(private http: HttpClient) {}
 
