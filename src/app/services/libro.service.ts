@@ -8,7 +8,7 @@ import { Libro } from '../model/libro.model';
   providedIn: 'root'
 })
 export class LibroService {
-  private apiUrl = 'http://localhost:8086/api/libros';
+  private apiUrl = 'https://librotech-api.onrender.com/api/libros';
   snackBar: any;
 
   constructor(private http: HttpClient) { }
