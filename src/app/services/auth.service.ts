@@ -9,7 +9,7 @@ import { User } from '../model/user.model';
 export class AuthService {
 
 
-  private apiUrl = 'http://localhost:8086/api/usuario'; 
+  private apiUrl = 'https://librotech-api.onrender.com/api/usuario'; 
   private usuarioAutenticado: boolean = false;
 
   constructor(private http: HttpClient) { }
