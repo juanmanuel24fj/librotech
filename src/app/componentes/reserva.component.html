@@ -1,0 +1,31 @@
+
+<div class="container mt-5">
+
+  
+    <h1 class="mt-4">Lista de Reservas</h1>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>ID del Libro</th>
+          <th>ID del Usuario</th>
+          <th>Fecha de Reserva</th>
+          <th>Fecha de Devolucion</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let reserva of reservas">
+          <td>{{ reserva.id }}</td>
+          <td>{{ reserva.libro.autor}}</td>
+          <td>{{ reserva.usuario.username }}</td>
+          <td>{{ reserva.fechaReserva }}</td>
+          <td>{{ reserva.fechaDevolucion}}</td>
+          <td>
+            <button class="btn btn-danger btn-sm" (click)="eliminarReserva(reserva.id)">Eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
