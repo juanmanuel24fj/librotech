@@ -71,7 +71,7 @@ export class LibrosComponent implements OnInit {
   }
 
   getImagenUrl(imagen: string): string {
-    return `http://librotech-api.onrender.com/api/libros/images/${imagen}`;
+    return `https://librotech-api.onrender.com/api/libros/images/${imagen}`;
 }
 
 
