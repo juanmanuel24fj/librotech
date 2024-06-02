@@ -1,4 +1,3 @@
-// src/app/componentes/reserva.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ReservaService } from '../services/reserva.service';
 import { Reserva } from '../model/reserva.model';
@@ -19,6 +18,7 @@ export class ReservaComponent implements OnInit {
     new Date());
   alertService: any;
   libro: any;
+  snackBar: any;
 
   constructor(private reservaService: ReservaService) {}
 
@@ -31,39 +31,52 @@ export class ReservaComponent implements OnInit {
       this.reservas = data;
     });
   }
-  crearReserva(): void {
-    this.reservaService.crearReserva(this.nuevaReserva).subscribe(data => {
-      this.reservas.push(data);
-      this.nuevaReserva = new Reserva(0, new Libro(0, '', '', 0, ''), new User(0, '', '',''), new Date(), new Date());
-    }, error => {
-      console.error('Error al crear la reserva', error);
-      alert('Error al crear la reserva');
-    });
+
+  crearReserva(libroId: number, usuarioId: number): void {
+    this.reservaService.crearReserva(libroId, usuarioId).subscribe(
+      () => {
+        this.obtenerReservas();
+        this.snackBar.open('Reserva creada exitosamente.', 'Cerrar', { duration: 3000 });
+      },
+      error => {
+        this.snackBar.open(error.error, 'Cerrar', { duration: 3000 });
+      }
+    );
   }
   
+  eliminarReserva(reservaId: number): void {
+    this.reservaService.eliminarReserva(reservaId).subscribe(
+      () => {
+        // Si la eliminación tiene éxito, incrementa el contador de ejemplares disponibles
+        this.libro.ejemplaresDisponibles++;
+        // Actualiza la interfaz de usuario para reflejar el cambio
+        this.actualizarContadorEjemplaresDisponibles();
+        // Muestra un mensaje de éxito
+        this.alertService.mostrarMensaje('Reserva eliminada correctamente.');
+      },
+      error => {
+        // Manejar errores
+        console.error('Error al eliminar la reserva:', error);
+      }
+    );
+  }
 
-// Método para eliminar una reserva
-eliminarReserva(reservaId: number): void {
-  // Lógica para eliminar la reserva en el backend
-  this.reservaService.eliminarReserva(reservaId).subscribe(
-    () => {
-      // Si la eliminación tiene éxito, incrementa el contador de ejemplares disponibles
-      this.libro.ejemplaresDisponibles++;
-      // Actualiza la interfaz de usuario para reflejar el cambio
-      this.actualizarContadorEjemplaresDisponibles();
-      // Muestra un mensaje de éxito
-      this.alertService.mostrarMensaje('Reserva eliminada correctamente.');
-    },
-    error => {
-      // Manejar errores
-      console.error('Error al eliminar la reserva:', error);
-    }
-  );
-}
+  devolverLibro(reservaId: number): void {
+    this.reservaService.devolverLibro(reservaId).subscribe(
+      () => {
+        this.libro.ejemplaresDisponibles++;
+        this.actualizarContadorEjemplaresDisponibles();
+        this.alertService.mostrarMensaje('Libro devuelto correctamente.');
+        this.reservas = this.reservas.filter(reserva => reserva.id !== reservaId);
+      },
+      error => {
+        console.error('Error al devolver el libro:', error);
+      }
+    );
+  }
 
-// Método para actualizar el contador de ejemplares disponibles en la interfaz de usuario
-actualizarContadorEjemplaresDisponibles(): void {
-  // Lógica para actualizar el contador en la interfaz de usuario
-}
+  actualizarContadorEjemplaresDisponibles(): void {
+    // Lógica para actualizar el contador en la interfaz de usuario
+  }
 
 }

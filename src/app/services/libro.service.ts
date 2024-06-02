@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Libro } from '../model/libro.model';
@@ -9,7 +9,6 @@ import { Libro } from '../model/libro.model';
 })
 export class LibroService {
   private apiUrl = 'https://librotech-api.onrender.com/api/libros';
-  snackBar: any;
 
   constructor(private http: HttpClient) { }
 
@@ -26,19 +25,10 @@ export class LibroService {
       })
     );
   }
-  buscarLibrosPorAutor(autor: string): Observable<Libro[]> {
-    const url = `${this.apiUrl}/autor/${autor}`;
-    return this.http.get<Libro[]>(url).pipe(
-      catchError(error => {
-        console.error('Error en la solicitud HTTP:', error);
-        return throwError(error);
-      })
-    );
+
+
+  crearLibro(formData: FormData): Observable<Libro> {
+    return this.http.post<Libro>(this.apiUrl, formData);
   }
-
-  crearLibro(libro:Libro): Observable<Libro> {
-    return this.http.post<Libro>(this.apiUrl, libro);
-  }
-
-
+  
 }

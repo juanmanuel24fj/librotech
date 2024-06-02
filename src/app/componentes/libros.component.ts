@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Libro } from '../model/libro.model';
 import { LibroService } from '../services/libro.service';
-import { ReservaService } from '../services/reserva.service';
+import { ReservaService } from '../services/reserva.service'; // Agrega la importación de ReservaService
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,15 +12,14 @@ export class LibrosComponent implements OnInit {
 
   libros: Libro[] = [];
   nombreBusqueda: string = '';
-  libroBuscado: Libro | undefined;
+  libroBuscado: Libro | undefined; // Declaración de libroBuscado
   mostrarFormulario: boolean = false;
   nuevoLibro: Libro = new Libro(0, '', '', 0, '');
   selectedFile!: File;
-Array: any;
 
   constructor(
     private libroService: LibroService,
-    private reservaService: ReservaService,
+    private reservaService: ReservaService, // Incluye ReservaService en el constructor
     private router: Router
   ) {}
 
@@ -40,35 +39,21 @@ Array: any;
     );
   }
 
-  buscarLibros(): void {
-    console.log('Buscando libros con el nombre o autor:', this.nombreBusqueda);
-
+  buscarLibrosPorNombre(): void {
+    console.log('Buscando libros con el nombre:', this.nombreBusqueda);
+  
     if (this.nombreBusqueda) {
       this.libroService.buscarLibrosPorTitulo(this.nombreBusqueda).subscribe(
-        (respuestaTitulo: any) => {
-          const librosTitulo = Array.isArray(respuestaTitulo) ? respuestaTitulo : [respuestaTitulo];
-          console.log('Libros encontrados por título:', librosTitulo);
-
-          // Ahora solo buscamos por autor si no se encontraron libros por título
-          if (librosTitulo.length === 0) {
-            this.libroService.buscarLibrosPorAutor(this.nombreBusqueda).subscribe(
-              (respuestaAutor: any) => {
-                const librosAutor = Array.isArray(respuestaAutor) ? respuestaAutor : [respuestaAutor];
-                console.log('Libros encontrados por autor:', librosAutor);
-
-                if (librosAutor.length > 0) {
-                  this.libros = librosAutor;
-                } else {
-                  this.libros = [];
-                  console.log('No se encontraron libros con el nombre o autor:', this.nombreBusqueda);
-                }
-              },
-              error => {
-                console.error('Error al buscar libros por autor:', error);
-              }
-            );
+        (respuesta: any) => {
+          const libros = Array.isArray(respuesta) ? respuesta : [respuesta];
+          console.log('Libros encontrados:', libros);
+  
+          if (libros.length > 0) {
+            this.libroBuscado = libros[0];
+            console.log('Libro buscado actualizado:', this.libroBuscado);
           } else {
-            this.libros = librosTitulo;
+            this.libroBuscado = undefined;
+            console.log('No se encontraron libros con el nombre:', this.nombreBusqueda);
           }
         },
         error => {
@@ -81,14 +66,14 @@ Array: any;
     }
   }
 
-
   onFileSelected(event: any): void {
     this.selectedFile = event.target.files[0];
   }
 
   getImagenUrl(imagen: string): string {
-    return `http://localhost:8086/api/images/${imagen}`;
-  }
+    return `http://librotech-api.onrender.com/api/libros/images/${imagen}`;
+}
+
 
   reservarLibro(libro: Libro): void {
     const usuarioId = 1; // Asigna el ID del usuario actualmente logueado
@@ -96,11 +81,14 @@ Array: any;
       this.reservaService.reservarLibro(libro.id, usuarioId).subscribe(
         () => {
           libro.ejemplaresDisponibles--;
+    
         },
         error => {
           console.error('Error al reservar libro:', error);
         }
       );
+      this.router.navigate(['/libros'])
+
     } else {
       alert(`No hay ejemplares disponibles para el libro ${libro.titulo}.`);
     }
@@ -113,9 +101,17 @@ Array: any;
   cerrarFormularioAgregar(): void {
     this.mostrarFormulario = false;
   }
+  
+  volverALibros(): void {
+    this.libroBuscado = undefined; // Esto oculta la sección del libro buscado y muestra la lista de libros nuevamente
+  }
 
   agregarLibro(): void {
-    this.libroService.crearLibro(this.nuevoLibro).subscribe(
+    const formData: FormData = new FormData();
+    formData.append('libro', new Blob([JSON.stringify(this.nuevoLibro)], { type: 'application/json' }));
+    formData.append('imagen', this.selectedFile);
+  
+    this.libroService.crearLibro(formData).subscribe(
       (libro: Libro) => {
         this.libros.push(libro);
         this.cerrarFormularioAgregar();
@@ -126,3 +122,4 @@ Array: any;
     );
   }
 }
+

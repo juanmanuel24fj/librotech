@@ -56,98 +56,91 @@
       border-radius: 5px;
       z-index: 1000;
     }
+    .libro-imagen {
+    width: 100%; /* Ancho del contenedor */
+    height: 200px; /* Altura deseada para las imágenes */
+    object-fit: contain; /* La imagen se ajustará al tamaño del contenedor sin recortarla */
+}
+
+
   </style>
 </head>
 <body>
   <div class="container mt-4 libro-container">
     <h2>Listado de Libros</h2>
-
+  
     <div class="mb-3">
       <label for="nombreBusqueda" class="form-label">Buscar:</label>
       <input type="text" id="nombreBusqueda" [(ngModel)]="nombreBusqueda" class="form-control">
       <div class="d-flex justify-content-between mt-2">
-        <button class="btn btn-primary" (click)="buscarLibros()">Buscar</button>
-        <button class="btn btn-success" (click)="mostrarFormulario = true">Agregar Libro</button>
+        <button class="btn btn-primary" (click)="buscarLibrosPorNombre()">Buscar</button>
+        <button class="btn btn-success" (click)="mostrarFormularioAgregar()">Agregar Libro</button>
       </div>
     </div>
 
-    <div *ngIf="libroBuscado">
-      <div class="fondo-difuminado"></div>
-      <div class="libro-cuadro">
-        <h3>{{ libroBuscado.titulo }}</h3>
-        <p>Autor: {{ libroBuscado.autor }}</p>
-        <p>Ejemplares Disponibles: {{ libroBuscado.ejemplaresDisponibles }}</p>
-        <img [src]="libroBuscado.imagen" alt="{{ libroBuscado.titulo }}" class="img-fluid">
-        <button class="btn btn-primary" (click)="reservarLibro(libroBuscado)">Reservar</button>
-        <a class="btn btn-success" href="/libros">Volver</a>
-      </div>
-    </div>
-
-    <div class="row" *ngIf="!libroBuscado">
-      <div class="col-md-4 mb-4" *ngFor="let libro of libros">
-        <div class="card h-100 card-libro">
-          <img [src]="libro.imagen" class="card-img-top" alt="{{ libro.titulo }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ libro.titulo }}</h5>
-            <p class="card-text">Autor: {{ libro.autor }}</p>
-            <p class="card-text">Ejemplares Disponibles: {{ libro.ejemplaresDisponibles }}</p>
-            <button class="btn btn-primary" (click)="reservarLibro(libro)">Reservar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modificado: Muestra los datos directamente si la búsqueda es por autor -->
-    <div *ngIf="libroBuscado && Array.isArray(libroBuscado)">
-      <div class="fondo-difuminado"></div>
-      <div class="libro-cuadro">
-        <div class="row">
-          <div class="col-md-4 mb-4" *ngFor="let libro of libros">
-            <div class="card h-100 card-libro">
-              <img [src]="libro.imagen" class="card-img-top" alt="{{ libro.titulo }}">
-              <div class="card-body">
-                <h5 class="card-title">{{ libro.titulo }}</h5>
-                <p class="card-text">Autor: {{ libro.autor }}</p>
-                <p class="card-text">Ejemplares Disponibles: {{ libro.ejemplaresDisponibles }}</p>
-                <button class="btn btn-primary" (click)="reservarLibro(libro)">Reservar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <a class="btn btn-success" href="/libros">Volver</a>
-      </div>
-    </div>
+<!-- Vista HTML para mostrar la información de un libro -->
+<div *ngIf="libroBuscado">
+  <div class="fondo-difuminado"></div>
+  <div class="libro-cuadro">
+      <h3>{{ libroBuscado.titulo }}</h3>
+      <p>Autor: {{ libroBuscado.autor }}</p>
+      <p>Ejemplares disponibles: {{ libroBuscado.ejemplaresDisponibles }}</p>
+      <!-- Mostrar la imagen del libro -->
+      <img [src]="getImagenUrl(libroBuscado.imagen)" alt="{{ libroBuscado.titulo }}" class="img-fluid">
+      <button class="btn btn-primary" (click)="reservarLibro(libroBuscado)">Reservar</button>
+      <button class="btn btn-secondary" (click)="volverALibros()">Volver a la lista</button>
   </div>
+</div>
 
-  <div *ngIf="mostrarFormulario">
-    <div class="fondo-difuminado" (click)="mostrarFormulario = false"></div>
-    <div class="modal">
-      <div class="modal-content">
-        <span class="close" (click)="mostrarFormulario = false">&times;</span>
-        <h2>Agregar Nuevo Libro</h2>
-        <form (ngSubmit)="agregarLibro()">
-          <div class="mb-3">
-             <label for="titulo" class="form-label">Título</label>
-            <input type="text" class="form-control" id="titulo" [(ngModel)]="nuevoLibro.titulo" name="titulo" required>
+<div class="row" *ngIf="libros.length > 0">
+  <div class="col-md-4 mb-4" *ngFor="let libro of libros">
+      <div class="card h-100 card-libro">
+          <img [src]="'http://localhost:8086/api/libros/images/' + libro.imagen" class="card-img-top libro-imagen" alt="{{ libro.titulo }}">
+          <div class="card-body">
+              <h5 class="card-title">{{ libro.titulo }}</h5>
+              <p class="card-text">Autor: {{ libro.autor }}</p>
+              <p class="card-text">Ejemplares Disponibles: {{ libro.ejemplaresDisponibles }}</p>
+              <button class="btn btn-primary" (click)="reservarLibro(libro)">Reservar</button>
           </div>
-          <div class="mb-3">
-            <label for="autor" class="form-label">Autor</label>
-            <input type="text" class="form-control" id="autor" [(ngModel)]="nuevoLibro.autor" name="autor" required>
-          </div>
-          <div class="mb-3">
-            <label for="ejemplares" class="form-label">Ejemplares Disponibles</label>
-            <input type="number" class="form-control" id="ejemplares" [(ngModel)]="nuevoLibro.ejemplaresDisponibles" name="ejemplares" required>
+      </div>
+  </div>
+</div>
+
+
+
+  
+    <div *ngIf="!libros.length">
+      <p>No se encontraron libros.</p>
+    </div>
+  
+    <div *ngIf="mostrarFormulario">
+      <div class="fondo-difuminado" (click)="cerrarFormularioAgregar()"></div>
+      <div class="modal">
+        <div class="modal-content">
+          <span class="close" (click)="cerrarFormularioAgregar()">&times;</span>
+          <h2>Agregar Nuevo Libro</h2>
+          <form (ngSubmit)="agregarLibro()">
+            <div class="mb-3">
+              <label for="titulo" class="form-label">Título</label>
+              <input type="text" class="form-control" id="titulo" [(ngModel)]="nuevoLibro.titulo" name="titulo" required>
+            </div>
+            <div class="mb-3">
+              <label for="autor" class="form-label">Autor</label>
+              <input type="text" class="form-control" id="autor" [(ngModel)]="nuevoLibro.autor" name="autor" required>
+            </div>
+            <div class="mb-3">
+              <label for="ejemplares" class="form-label">Ejemplares Disponibles</label>
+              <input type="number" class="form-control" id="ejemplares" [(ngModel)]="nuevoLibro.ejemplaresDisponibles" name="ejemplares" required>
+            </div>
             <div class="mb-3">
               <label for="imagen" class="form-label">Imagen</label>
               <input type="file" class="form-control" id="imagen" (change)="onFileSelected($event)">
             </div>
             <button type="submit" class="btn btn-primary">Agregar</button>
-          </div>
           </form>
-    
         </div>
       </div>
     </div>
-  </body>
-  </html>
-  
+  </div>
+</body>
+</html>

@@ -33,8 +33,10 @@ import { ReservaComponent } from './componentes/reserva.component';
     ReactiveFormsModule ,
     AppRoutingModule,
     HttpClientModule,
-    RouterLink
+    RouterLink,
+    BrowserModule
     
+
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]

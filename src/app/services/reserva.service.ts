@@ -12,8 +12,8 @@ export class ReservaService {
 
   constructor(private http: HttpClient) {}
 
-  crearReserva(reserva: Reserva): Observable<Reserva> {
-    return this.http.post<Reserva>(this.apiUrl, reserva);
+  crearReserva(libroId: number, usuarioId: number): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reservar/${libroId}/${usuarioId}`, {});
   }
 
   obtenerReservas(): Observable<Reserva[]> {
@@ -25,5 +25,8 @@ export class ReservaService {
   }
   reservarLibro(libroId: number, usuarioId: number): Observable<any> {
     return this.http.post(`${this.apiUrl}/reservar/${libroId}/${usuarioId}`, {});
+  }
+  devolverLibro(id: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/devolver/${id}`, {});
   }
 }
