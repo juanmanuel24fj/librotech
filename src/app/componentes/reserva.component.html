@@ -14,8 +14,9 @@
       <tr *ngFor="let reserva of reservas">
         <td>{{ reserva.libro.autor}}</td>
         <td>{{ reserva.usuario.username }}</td>
-        <td>{{ reserva.fechaReserva }}</td>
-        <td>{{ reserva.fechaDevolucion}}</td>
+       <td>{{ reserva.fechaReserva | date: 'dd/MM/yyyy' }}</td>
+<td>{{ reserva.fechaDevolucion | date: 'dd/MM/yyyy' }}</td>
+
         <td>
           <button class="btn btn-success btn-sm" (click)="devolverLibro(reserva.id)">Libro devuelto</button>
         </td>
