@@ -3,6 +3,7 @@ import { ReservaService } from '../services/reserva.service';
 import { Reserva } from '../model/reserva.model';
 import { Libro } from '../model/libro.model';
 import { User } from '../model/user.model';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-reserva',
@@ -10,6 +11,7 @@ import { User } from '../model/user.model';
 })
 export class ReservaComponent implements OnInit {
   reservas: Reserva[] = [];
+  role = this.authService.role
   nuevaReserva: Reserva = new Reserva(
     0, 
     new Libro(0, '', '', 0, ''), 
@@ -20,9 +22,12 @@ export class ReservaComponent implements OnInit {
   libro: any;
   snackBar: any;
 
-  constructor(private reservaService: ReservaService) {}
+  constructor(private reservaService: ReservaService,
+              private authService: AuthService
+  ) {}
 
   ngOnInit() {
+    this.authService.update()
     this.obtenerReservas();
   }
 

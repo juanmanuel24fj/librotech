@@ -11,13 +11,14 @@ import { RegisterComponent } from './componentes/register.component';
 import { LibrosComponent } from './componentes/libros.component';
 import { UsuarioComponent } from './componentes/usuario.component';
 import { ReservaComponent } from './componentes/reserva.component';
+import { jwtGuard } from './guardians/jwt.guard';
 
 const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'libros', component: LibrosComponent },
+  { path: 'libros', component: LibrosComponent, canMatch: [jwtGuard] },
   { path: 'user', component: UsuarioComponent },
-  { path: 'reservas', component: ReservaComponent },
+  { path: 'reservas', component: ReservaComponent, canMatch: [jwtGuard] },
 
   { path: '', redirectTo: '/login', pathMatch: 'full' }, 
   { path: '**', redirectTo: '/login' }

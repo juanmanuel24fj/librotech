@@ -3,6 +3,7 @@ import { Libro } from '../model/libro.model';
 import { LibroService } from '../services/libro.service';
 import { ReservaService } from '../services/reserva.service'; // Agrega la importación de ReservaService
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-libros',
@@ -16,14 +17,17 @@ export class LibrosComponent implements OnInit {
   mostrarFormulario: boolean = false;
   nuevoLibro: Libro = new Libro(0, '', '', 0, '');
   selectedFile!: File;
+  role = this.authService.role 
 
   constructor(
     private libroService: LibroService,
     private reservaService: ReservaService, // Incluye ReservaService en el constructor
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.authService.update()
     this.obtenerLibros();
   }
 

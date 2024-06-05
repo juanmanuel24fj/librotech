@@ -18,7 +18,7 @@
 <td>{{ reserva.fechaDevolucion | date: 'dd/MM/yyyy' }}</td>
 
         <td>
-          <button class="btn btn-success btn-sm" (click)="devolverLibro(reserva.id)">Libro devuelto</button>
+          <button *ngIf="role() == 'ROLE_ADMIN'" class="btn btn-success btn-sm" (click)="devolverLibro(reserva.id)">Libro devuelto</button>
         </td>
       </tr>
     </tbody>

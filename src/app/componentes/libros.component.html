@@ -74,7 +74,7 @@
       <input type="text" id="nombreBusqueda" [(ngModel)]="nombreBusqueda" class="form-control">
       <div class="d-flex justify-content-between mt-2">
         <button class="btn btn-primary" (click)="buscarLibrosPorNombre()">Buscar</button>
-        <button class="btn btn-success" (click)="mostrarFormularioAgregar()">Agregar Libro</button>
+        <button *ngIf="role() == 'ROLE_ADMIN'" class="btn btn-success" (click)="mostrarFormularioAgregar()">Agregar Libro</button>
       </div>
     </div>
 

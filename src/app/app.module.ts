@@ -7,12 +7,13 @@ import { AppComponent } from './app.component';
 import { AuthService } from './services/auth.service';
 import { LoginComponent } from './componentes/login.component';
 import { RegisterComponent } from './componentes/register.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { LibrosComponent } from './componentes/libros.component';
 import { NavbarComponent } from './componentes/navbar.component';
 import { UsuarioComponent } from './componentes/usuario.component';
 import { ReservaComponent } from './componentes/reserva.component';
+import { jwtInterceptor } from './jwt.interceptor';
 
 
 
@@ -38,7 +39,7 @@ import { ReservaComponent } from './componentes/reserva.component';
     
 
   ],
-  providers: [AuthService],
+  providers: [AuthService, provideHttpClient(withInterceptors([jwtInterceptor]))],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

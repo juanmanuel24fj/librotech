@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../model/user.model';
 import { UsuarioService } from '../services/usuario.service';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -9,10 +10,14 @@ import { UsuarioService } from '../services/usuario.service';
 })
 export class UsuarioComponent implements OnInit {
   usuarios: User[] = [];
+  role = this.authService.role 
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(private usuarioService: UsuarioService,
+              private authService: AuthService
+  ) {}
 
   ngOnInit() {
+    this.authService.update()
     this.getUsuarios();
   }
 
