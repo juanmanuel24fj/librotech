@@ -16,7 +16,7 @@
           <th>ID</th>
           <th>Nombre</th>
           <th>Correo</th>
-          <th>Acciones</th>
+          <button *ngIf="role() == 'ROLE_ADMIN'" >Acciones</button>
         </tr>
       </thead>
       <tbody>
