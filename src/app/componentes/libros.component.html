@@ -95,7 +95,7 @@
 <div class="row" *ngIf="libros.length > 0">
   <div class="col-md-4 mb-4" *ngFor="let libro of libros">
       <div class="card h-100 card-libro">
-          <img [src]="'https://librotech-api.onrender.com/api/libros/images/' + libro.imagen" class="card-img-top libro-imagen" alt="{{ libro.titulo }}">
+          <img [src]="getImagenUrl(libro.imagen)" class="card-img-top libro-imagen" alt="{{ libro.titulo }}">
           <div class="card-body">
               <h5 class="card-title">{{ libro.titulo }}</h5>
               <p class="card-text">Autor: {{ libro.autor }}</p>
