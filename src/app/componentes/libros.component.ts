@@ -85,7 +85,7 @@ export class LibrosComponent implements OnInit {
       this.reservaService.reservarLibro(libro.id, this.id()).subscribe(
         () => {
           libro.ejemplaresDisponibles--;
-    
+          this.obtenerLibros()
         },
         error => {
           console.error('Error al reservar libro:', error);
