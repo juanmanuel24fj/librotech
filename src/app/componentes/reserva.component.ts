@@ -12,12 +12,13 @@ import { AuthService } from '../services/auth.service';
 export class ReservaComponent implements OnInit {
   reservas: Reserva[] = [];
   role = this.authService.role
-  nuevaReserva: Reserva = new Reserva(
+   nuevaReserva: Reserva = new Reserva(
     0, 
     new Libro(0, '', '', 0, ''), 
-    new User(0, '', '',''), 
+    null, 
     new Date(), 
-    new Date());
+    new Date()
+  );
   alertService: any;
   libro: any;
   snackBar: any;
@@ -37,14 +38,25 @@ export class ReservaComponent implements OnInit {
     });
   }
 
-  crearReserva(libroId: number, usuarioId: number): void {
+crearReserva(libroId: number): void {
+    const usuarioId = this.authService.id();
+    if (usuarioId === 0) {
+      this.snackBar.open('Error: Usuario no autenticado.', 'Cerrar', { duration: 3000 });
+      return;
+    }
+
     this.reservaService.crearReserva(libroId, usuarioId).subscribe(
       () => {
         this.obtenerReservas();
         this.snackBar.open('Reserva creada exitosamente.', 'Cerrar', { duration: 3000 });
       },
       error => {
-        this.snackBar.open(error.error, 'Cerrar', { duration: 3000 });
+        let errorMessage = 'Error al reservar libro.';
+        if (error.error.message === "El usuario ya tiene una reserva activa.") {
+          errorMessage = "No se puede realizar la reserva. El usuario ya tiene una reserva activa.";
+        }
+        this.snackBar.open(errorMessage, 'Cerrar', { duration: 3000 });
+        console.error('Error al reservar libro:', error);
       }
     );
   }
