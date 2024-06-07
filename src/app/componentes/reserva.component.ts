@@ -12,6 +12,7 @@ import { AuthService } from '../services/auth.service';
 export class ReservaComponent implements OnInit {
   reservas: Reserva[] = [];
   role = this.authService.role
+  id=this.authService.id();
    nuevaReserva: Reserva = new Reserva(
     0, 
     new Libro(0, '', '', 0, ''), 
@@ -39,13 +40,7 @@ export class ReservaComponent implements OnInit {
   }
 
 crearReserva(libroId: number): void {
-    const usuarioId = this.authService.id();
-    if (usuarioId === 0) {
-      this.snackBar.open('Error: Usuario no autenticado.', 'Cerrar', { duration: 3000 });
-      return;
-    }
-
-    this.reservaService.crearReserva(libroId, usuarioId).subscribe(
+    this.reservaService.crearReserva(libroId, this.id()).subscribe(
       () => {
         this.obtenerReservas();
         this.snackBar.open('Reserva creada exitosamente.', 'Cerrar', { duration: 3000 });
