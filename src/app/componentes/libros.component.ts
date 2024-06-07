@@ -18,6 +18,7 @@ export class LibrosComponent implements OnInit {
   nuevoLibro: Libro = new Libro(0, '', '', 0, '');
   selectedFile!: File;
   role = this.authService.role 
+  id = this.authService.id
 
   constructor(
     private libroService: LibroService,
@@ -80,9 +81,8 @@ export class LibrosComponent implements OnInit {
 
 
   reservarLibro(libro: Libro): void {
-    const usuarioId = 1; // Asigna el ID del usuario actualmente logueado
     if (libro.ejemplaresDisponibles > 0) {
-      this.reservaService.reservarLibro(libro.id, usuarioId).subscribe(
+      this.reservaService.reservarLibro(libro.id, this.id()).subscribe(
         () => {
           libro.ejemplaresDisponibles--;
     
