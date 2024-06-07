@@ -82,7 +82,7 @@ export class LibrosComponent implements OnInit {
 
   reservarLibro(libro: Libro): void {
     if (libro.ejemplaresDisponibles > 0) {
-      this.reservaService.reservarLibro(libro.id, this.id()).subscribe(
+      this.reservaService.reservarLibro(libro.id, this.id()).subscribe(next:
         () => {
           libro.ejemplaresDisponibles--;
           this.obtenerLibros()
