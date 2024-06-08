@@ -3,8 +3,9 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>ID del Libro</th>
-        <th>ID del Usuario</th>
+        <th>Titulo del Libro</th>
+        <th>Autor del Libro</th>
+        <th>Usuario</th>
         <th>Fecha de Reserva</th>
         <th>Fecha de Devolucion</th>
           <button *ngIf="role() == 'ROLE_ADMIN'" >Acciones</button>
@@ -12,6 +13,7 @@
     </thead>
     <tbody>
       <tr *ngFor="let reserva of reservas">
+        <td>{{ reserva.libro.titulo}}</td>
         <td>{{ reserva.libro.autor}}</td>
         <td>{{ reserva.usuario.username }}</td>
        <td>{{ reserva.fechaReserva | date: 'dd/MM/yyyy' }}</td>
